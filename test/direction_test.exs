@@ -27,6 +27,47 @@ defmodule DirectionTest do
     refute Direction.is_direction(nil)
   end
 
+  # from/to string
+  test "N as string gives :north" do
+    assert Direction.from_string("N") == :north
+  end
+  
+  test "E as string gives :east" do
+    assert Direction.from_string("E") == :east
+  end
+  
+  test "S as string gives :south" do
+    assert Direction.from_string("S") == :south
+  end
+  
+  test "W as string gives :west" do
+    assert Direction.from_string("W") == :west
+  end
+  
+  test "invalid string gives nil" do
+    assert Direction.from_string(nil) == nil
+  end
+
+  test ":north to string gives N" do
+    assert Direction.to_string(nil) == ""
+  end
+
+  test ":south to string gives S" do
+    assert Direction.to_string(nil) == ""
+  end
+
+  test ":west to string gives W" do
+    assert Direction.to_string(nil) == ""
+  end
+
+  test ":east to string gives E" do
+    assert Direction.to_string(nil) == ""
+  end
+
+  test "non-direction to string gives empty string" do
+    assert Direction.to_string(nil) == ""
+  end
+
   # Rotate right
   test "rotating right from north gives east" do
     assert Direction.rotate_right(:north) == :east

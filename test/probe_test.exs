@@ -18,6 +18,21 @@ defmodule ProbeTest do
     assert_probe(probe, 1, 2, :north)
   end
 
+  test "creates probe state from string" do
+    probe = Probe.from_string("11 -22 N")
+    assert_probe(probe, 11, -22, :north)
+  end
+
+  test "creates probe state from invalid string" do
+    assert Probe.from_string("") == nil
+  end
+
+  # to string
+  test "probe state to string" do
+    probe = Probe.make_probe(1, 2, :north)
+    assert Probe.to_string(probe) == "1 2 N"
+  end
+
   # rotates probe
   test "rotating probe left rotates to the left" do
     probe = Probe.make_probe(1, 2, :north)
@@ -34,7 +49,7 @@ defmodule ProbeTest do
     assert_probe(Probe.rotate(:foo, probe), 1, 2, :north)
   end
 
-  #moves probe forward
+  # moves probe forward
   test "moving probe north increments Y" do
     probe = Probe.make_probe(1, 2, :north)
     assert_probe(Probe.move_forward(probe), 1, 3, :north)

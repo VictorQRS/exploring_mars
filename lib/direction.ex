@@ -24,6 +24,58 @@ defmodule Direction do
   end
 
   @doc """
+  Returns a direction from a string and nil if its not a valid one.
+
+  ## Parameters
+
+    - string: string containing a direction
+
+  ## Examples
+
+      iex> Direction.from_string("N")
+      :north
+
+      iex> Direction.from_string(nil)
+      nil
+
+  """
+  def from_string(string) do
+    case string do
+      "N" -> :north
+      "S" -> :south
+      "W" -> :west
+      "E" -> :east
+      _ -> nil
+    end
+  end
+
+  @doc """
+  Transforms a direction into a string.
+
+  ## Parameters
+
+    - direction: value to be converted to string
+
+  ## Examples
+
+      iex> Direction.to_string(:north)
+      "N"
+
+      iex> Direction.to_string(nil)
+      ""
+
+  """
+  def to_string(direction) do
+    case direction do
+      :north -> "N"
+      :south -> "S"
+      :west -> "W"
+      :east -> "E"
+      _ -> ""
+    end
+  end
+
+  @doc """
   Rotates 90 degrees to the left or right.
 
   ## Parameters
