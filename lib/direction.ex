@@ -8,7 +8,7 @@ defmodule Direction do
 
   ## Parameters
 
-    - direction: value to be evaluated if it is a direction
+    - value: value to be evaluated if it is a direction
 
   ## Examples
 
@@ -50,7 +50,7 @@ defmodule Direction do
   end
 
   @doc """
-  Transforms a direction into a string.
+  Transforms a direction into a string. If it is not a valid direction, an empty string shall be returned.
 
   ## Parameters
 
@@ -76,10 +76,11 @@ defmodule Direction do
   end
 
   @doc """
-  Rotates 90 degrees to the left or right.
+  Rotates 90 degrees to the left or right. If it is not given a correct, it will not move.
 
   ## Parameters
 
+    - command: if should rotate :left or :right
     - current_direction: direction to be rotated from
 
   ## Examples
@@ -90,8 +91,8 @@ defmodule Direction do
       iex> Direction.rotate(:right, :north)
       :east
 
-      iex> Direction.rotate_left(nil)
-      nil
+      iex> Direction.rotate(nil, :north)
+      :north
 
   """
   def rotate(command, current_direction) do
@@ -103,7 +104,7 @@ defmodule Direction do
   end
 
   @doc """
-  Rotates 90 degrees to the left.
+  Rotates 90 degrees to the left. If it is not given a correct direction, nil is returned.
 
   ## Parameters
 
@@ -129,7 +130,7 @@ defmodule Direction do
   end
 
   @doc """
-  Rotates 90 degrees to the right.
+  Rotates 90 degrees to the right. If it is not given a correct direction, nil is returned.
 
   ## Parameters
 

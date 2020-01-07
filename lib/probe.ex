@@ -6,6 +6,12 @@ defmodule Probe do
   @doc """
   Makes a probe if given its X and Y position, and its direction.
 
+  ## Parameters
+
+    - pos_x: the position in the X-axis
+    - pos_y: the position in the Y-axis
+    - direction: the direction the probe is facing
+
   ## Examples
 
       iex> Probe.make_probe(1, 2, :north)
@@ -21,12 +27,19 @@ defmodule Probe do
   end
 
   @doc """
-  Makes a probe if given its X and Y position, and its direction.
+  Makes a probe from a given string. If it is an invalid string, nil is returned.
+
+  ## Parameters
+
+    - string: string to be parsed into a probe state
 
   ## Examples
 
-      iex> Probe.make_probe(1, 2, :north)
+      iex> Probe.from_string("1 2 N")
       %{ pos_x: 1, pos_y: 2, direction: :north }
+
+      iex> Probe.from_string("")
+      nil
 
   """
   def from_string(string) do
@@ -43,12 +56,16 @@ defmodule Probe do
   end
 
   @doc """
-  Makes a probe if given its X and Y position, and its direction.
+  Transforms the probe state into a string.
+
+  ## Parameters
+
+    - probe: the probe state that will be transformed into a string
 
   ## Examples
 
-      iex> Probe.make_probe(1, 2, :north)
-      %{ pos_x: 1, pos_y: 2, direction: :north }
+      iex> Probe.to_string(Probe.make_probe(1, 2, :north))
+      "1 2 N"
 
   """
   def to_string(probe) do
@@ -56,7 +73,12 @@ defmodule Probe do
   end
 
   @doc """
-  Rotate a probe left or right.
+  Rotate a probe left or right. If the wrong command is given, the probe does not move.
+
+  ## Parameters
+
+    - command: if should go :left or :right
+    - probe: the probe state that will be rotated
 
   ## Examples
 
@@ -70,6 +92,10 @@ defmodule Probe do
 
   @doc """
   Moves a probe forward on the direction it is facing.
+
+  ## Parameters
+
+    - probe: the probe state that will move forward
 
   ## Examples
 
