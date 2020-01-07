@@ -19,4 +19,18 @@ defmodule Probe do
       nil
     end
   end
+
+
+  @doc """
+  Rotate a probe left or right.
+
+  ## Examples
+
+      iex> Probe.rotate(:left, Probe.make_probe(1, 2, :north))
+      %{ pos_x: 1, pos_y: 2, direction: :west }
+
+  """
+  def rotate(command, probe) do
+    make_probe(probe.pos_x, probe.pos_y, Direction.rotate(command, probe.direction))
+  end
 end
