@@ -73,9 +73,11 @@ defmodule DirectionTest do
   test "rotating left" do
     assert Direction.rotate(:left, :north) == :west
   end
+
   test "rotating right" do
     assert Direction.rotate(:right, :north) == :east
   end
+
   test "rotating non-direction" do
     assert Direction.rotate(nil, :north) == nil
   end

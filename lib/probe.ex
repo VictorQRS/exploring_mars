@@ -20,7 +20,6 @@ defmodule Probe do
     end
   end
 
-
   @doc """
   Rotate a probe left or right.
 
@@ -31,6 +30,11 @@ defmodule Probe do
 
   """
   def rotate(command, probe) do
-    make_probe(probe.pos_x, probe.pos_y, Direction.rotate(command, probe.direction))
+    new_direction = Direction.rotate(command, probe.direction)
+    if new_direction == nil do
+      probe
+    else
+      make_probe(probe.pos_x, probe.pos_y, new_direction)
+    end
   end
 end

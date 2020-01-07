@@ -31,6 +31,6 @@ defmodule ProbeTest do
 
   test "rotate probe with a non-directional command" do
     probe = Probe.make_probe(1, 2, :north)
-    assert Probe.rotate(nil, probe) == nil
+    assert_probe(Probe.rotate(:foo, probe), 1, 2, :north)
   end
 end
