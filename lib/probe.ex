@@ -37,4 +37,23 @@ defmodule Probe do
       make_probe(probe.pos_x, probe.pos_y, new_direction)
     end
   end
+
+  @doc """
+  Moves a probe forward on the direction it is facing.
+
+  ## Examples
+
+      iex> Probe.move_forward(Probe.make_probe(1, 2, :north))
+      %{ pos_x: 1, pos_y: 3, direction: :north }
+
+  """
+  def move_forward(probe) do
+    case probe.direction do
+      :north -> make_probe(probe.pos_x, probe.pos_y + 1, probe.direction)
+      :south -> make_probe(probe.pos_x, probe.pos_y - 1, probe.direction)
+      :west -> make_probe(probe.pos_x - 1, probe.pos_y, probe.direction)
+      :east -> make_probe(probe.pos_x + 1, probe.pos_y, probe.direction)
+      _ -> probe
+    end
+  end
 end

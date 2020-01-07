@@ -19,18 +19,39 @@ defmodule ProbeTest do
   end
 
   # rotates probe
-  test "rotate probe left" do
+  test "rotating probe left rotates to the left" do
     probe = Probe.make_probe(1, 2, :north)
     assert_probe(Probe.rotate(:left, probe), 1, 2, :west)
   end
 
-  test "rotate probe right" do
+  test "rotating probe right rotates to the right" do
     probe = Probe.make_probe(1, 2, :north)
     assert_probe(Probe.rotate(:left, probe), 1, 2, :west)
   end
 
-  test "rotate probe with a non-directional command" do
+  test "rotating probe with a non-directional command does nothing" do
     probe = Probe.make_probe(1, 2, :north)
     assert_probe(Probe.rotate(:foo, probe), 1, 2, :north)
+  end
+
+  #moves probe forward
+  test "moving probe north increments Y" do
+    probe = Probe.make_probe(1, 2, :north)
+    assert_probe(Probe.move_forward(probe), 1, 3, :north)
+  end
+
+  test "moving probe east increments X" do
+    probe = Probe.make_probe(1, 2, :east)
+    assert_probe(Probe.move_forward(probe), 2, 2, :east)
+  end
+
+  test "moving probe south decrements Y" do
+    probe = Probe.make_probe(1, 2, :south)
+    assert_probe(Probe.move_forward(probe), 1, 1, :south)
+  end
+
+  test "moving probe west decrements X" do
+    probe = Probe.make_probe(1, 2, :west)
+    assert_probe(Probe.move_forward(probe), 0, 2, :west)
   end
 end
