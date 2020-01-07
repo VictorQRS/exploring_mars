@@ -112,4 +112,16 @@ defmodule Probe do
       _ -> probe
     end
   end
+
+  def move(command, probe) do
+    case command do
+      :forward -> move_forward(probe)
+      c when c in [:left, :right] -> rotate(command, probe)
+      _ -> probe
+    end
+  end
+
+  def move_batch(commands, probe) do
+    Enum.reduce(commands, probe, fn comm, acc -> move(comm, acc) end)
+  end
 end

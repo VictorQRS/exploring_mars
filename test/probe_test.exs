@@ -69,4 +69,31 @@ defmodule ProbeTest do
     probe = Probe.make_probe(1, 2, :west)
     assert_probe(Probe.move_forward(probe), 0, 2, :west)
   end
+
+  # move probe
+  test "moving probe left rotates it to the left" do
+    probe = Probe.make_probe(1, 2, :west)
+    assert_probe(Probe.move(:left, probe), 1, 2, :south)
+  end
+
+  test "moving probe right rotates it to the right" do
+    probe = Probe.make_probe(1, 2, :west)
+    assert_probe(Probe.move(:right, probe), 1, 2, :north)
+  end
+
+  test "moving probe forward moves it forward" do
+    probe = Probe.make_probe(1, 2, :west)
+    assert_probe(Probe.move(:forward, probe), 0, 2, :west)
+  end
+
+  test "use a wrong command to move the probe does nothing" do
+    probe = Probe.make_probe(1, 2, :west)
+    assert_probe(Probe.move(:foo, probe), 1, 2, :west)
+  end
+
+  test "move probe in batch" do
+    probe = Probe.make_probe(1, 2, :west)
+    batch = [:forward, :left, :forward, :left, :forward, :left, :forward, :left]
+    assert_probe(Probe.move_batch(batch, probe), 1, 2, :west)
+  end
 end
