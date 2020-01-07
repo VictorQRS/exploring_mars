@@ -98,7 +98,7 @@ defmodule Direction do
     case command do
       :left -> rotate_left(current_direction)
       :right -> rotate_right(current_direction)
-      _ -> nil
+      _ -> current_direction
     end
   end
 

@@ -65,13 +65,7 @@ defmodule Probe do
 
   """
   def rotate(command, probe) do
-    new_direction = Direction.rotate(command, probe.direction)
-
-    if new_direction == nil do
-      probe
-    else
-      make_probe(probe.pos_x, probe.pos_y, new_direction)
-    end
+    make_probe(probe.pos_x, probe.pos_y, Direction.rotate(command, probe.direction))
   end
 
   @doc """

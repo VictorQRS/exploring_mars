@@ -120,6 +120,6 @@ defmodule DirectionTest do
   end
 
   test "rotating non-direction" do
-    assert Direction.rotate(nil, :north) == nil
+    assert Direction.rotate(nil, :north) == :north
   end
 end
