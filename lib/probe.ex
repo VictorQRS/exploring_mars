@@ -45,10 +45,11 @@ defmodule Probe do
   def from_string(string) do
     if String.match?(string, ~r/^-?\d+ -?\d+ [N|S|W|E]$/) do
       array = string |> String.split()
+
       make_probe(
-          Enum.at(array, 0) |> String.to_integer(),
-          Enum.at(array, 1) |> String.to_integer(),
-          Enum.at(array, 2) |> Direction.from_string
+        Enum.at(array, 0) |> String.to_integer(),
+        Enum.at(array, 1) |> String.to_integer(),
+        Enum.at(array, 2) |> Direction.from_string()
       )
     else
       nil
