@@ -4,7 +4,38 @@ defmodule Probe do
   """
 
   @doc """
-  Makes a probe if given its X and Y position, and its direction.
+  Makes a probe if given its status, X and Y position, and its direction.
+
+  ## Parameters
+
+    - status: status of the probe
+    - pos_x: the position in the X-axis
+    - pos_y: the position in the Y-axis
+    - direction: the direction the probe is facing
+
+  ## Examples
+
+      iex> Probe.make_probe(:ok, 1, 2, :north)
+      %{ pos_x: 1, pos_y: 2, direction: :north, status: :ok }
+
+      iex> Probe.make_probe(:not_ok, 1, 2, :north)
+      %{status: :lost, pos_x: -1, pos_y: -1, direction: :unknown}
+
+  """
+  def make_probe(status, pos_x, pos_y, direction) do
+    if is_probe_safe(status, pos_x, pos_y, direction) do
+      %{status: :ok, pos_x: pos_x, pos_y: pos_y, direction: direction}
+    else
+      make_lost_probe()
+    end
+  end
+
+  defp is_probe_safe(status, pos_x, pos_y, direction) do
+    status == :ok and pos_x >= 0 and pos_y >= 0 and Direction.is_direction(direction)
+  end
+
+  @doc """
+  Makes a probe if given its X and Y position, and its direction. If it is an invalid probe state, it will return a lost probe.
 
   ## Parameters
 
@@ -15,15 +46,24 @@ defmodule Probe do
   ## Examples
 
       iex> Probe.make_probe(1, 2, :north)
-      %{ pos_x: 1, pos_y: 2, direction: :north }
+      %{ pos_x: 1, pos_y: 2, direction: :north, status: :ok }
 
   """
   def make_probe(pos_x, pos_y, direction) do
-    if Direction.is_direction(direction) do
-      %{pos_x: pos_x, pos_y: pos_y, direction: direction}
-    else
-      nil
-    end
+    make_probe(:ok, pos_x, pos_y, direction)
+  end
+
+  @doc """
+  Makes a lost probe.
+
+  ## Examples
+
+      iex> Probe.make_lost_probe()
+      %{status: :lost, pos_x: -1, pos_y: -1, direction: :unknown}
+
+  """
+  def make_lost_probe do
+    %{status: :lost, pos_x: -1, pos_y: -1, direction: :unknown}
   end
 
   @doc """
@@ -36,10 +76,10 @@ defmodule Probe do
   ## Examples
 
       iex> Probe.from_string("1 2 N")
-      %{ pos_x: 1, pos_y: 2, direction: :north }
+      %{ pos_x: 1, pos_y: 2, direction: :north, status: :ok }
 
       iex> Probe.from_string("")
-      nil
+      %{status: :lost, pos_x: -1, pos_y: -1, direction: :unknown}
 
   """
   def from_string(string) do
@@ -52,7 +92,7 @@ defmodule Probe do
         Enum.at(array, 2) |> Direction.from_string()
       )
     else
-      nil
+      make_lost_probe()
     end
   end
 
@@ -68,9 +108,16 @@ defmodule Probe do
       iex> Probe.to_string(Probe.make_probe(1, 2, :north))
       "1 2 N"
 
+      iex> Probe.to_string(Probe.make_lost_probe())
+      "lost"
+
   """
   def to_string(probe) do
-    "#{probe.pos_x} #{probe.pos_y} #{Direction.to_string(probe.direction)}"
+    if (probe.status == :ok) do
+      "#{probe.pos_x} #{probe.pos_y} #{Direction.to_string(probe.direction)}"
+    else
+      "lost"
+    end
   end
 
   @doc """
@@ -84,7 +131,7 @@ defmodule Probe do
   ## Examples
 
       iex> Probe.rotate(:left, Probe.make_probe(1, 2, :north))
-      %{ pos_x: 1, pos_y: 2, direction: :west }
+      %{ pos_x: 1, pos_y: 2, direction: :west, status: :ok }
 
   """
   def rotate(command, probe) do
@@ -101,7 +148,7 @@ defmodule Probe do
   ## Examples
 
       iex> Probe.move_forward(Probe.make_probe(1, 2, :north))
-      %{ pos_x: 1, pos_y: 3, direction: :north }
+      %{ pos_x: 1, pos_y: 3, direction: :north, status: :ok }
 
   """
   def move_forward(probe) do
@@ -114,14 +161,43 @@ defmodule Probe do
     end
   end
 
+  @doc """
+  Moves a probe according to a command (:forward, :left, :right).
+
+  ## Parameters
+
+    - command: the command given to the probe
+    - probe: the probe state
+
+  ## Examples
+
+      iex> Probe.move(:forward, Probe.make_probe(1, 2, :north))
+      %{ pos_x: 1, pos_y: 3, direction: :north, status: :ok }
+
+  """
   def move(command, probe) do
-    case command do
-      :forward -> move_forward(probe)
-      c when c in [:left, :right] -> rotate(command, probe)
-      _ -> probe
+    cond do
+      probe.status == :lost -> probe
+      command == :forward -> move_forward(probe)
+      command in [:left, :right] -> rotate(command, probe)
+      true -> probe
     end
   end
 
+  @doc """
+  Moves a probe according to an enumerable containing commands (:forward, :left, :right).
+
+  ## Parameters
+
+    - commands: enumaerable containing commands to be given to the probe.
+    - probe: the probe state that will move forward
+
+  ## Examples
+
+      iex> Probe.move_batch([:forward], Probe.make_probe(1, 2, :north))
+      %{ pos_x: 1, pos_y: 3, direction: :north, status: :ok }
+
+  """
   def move_batch(commands, probe) do
     Enum.reduce(commands, probe, fn comm, acc -> move(comm, acc) end)
   end
