@@ -27,7 +27,7 @@ Caso a sonda, por alguma razão, saia do mapa, definido por (0, 0) e o limite su
 Para rodar a aplicação, basta rodar o comando:
 
 ```
-mix run probe.exs <filename>
+mix probe <filename>
 ```
 
 Onde `filename` representa o arquivo contendo as instruções das sondas. Alguns exemplos se encontram dentro da pasta `examples`.
