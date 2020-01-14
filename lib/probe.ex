@@ -4,7 +4,7 @@ defmodule Probe do
   """
 
   @doc """
-  Makes a probe if given its status, X and Y position, and its direction.
+  Makes a probe if given its status, X and Y position, and its direction. If it is an invalid probe state, it will return a lost probe.
 
   ## Parameters
 
@@ -67,7 +67,7 @@ defmodule Probe do
   end
 
   @doc """
-  Makes a probe from a given string. If it is an invalid string, nil is returned.
+  Makes a probe from a given string. If it is an invalid string, a lost probe is returned.
 
   ## Parameters
 
@@ -113,7 +113,7 @@ defmodule Probe do
 
   """
   def to_string(probe) do
-    if (probe.status == :ok) do
+    if probe.status == :ok do
       "#{probe.pos_x} #{probe.pos_y} #{Direction.to_string(probe.direction)}"
     else
       "lost"
@@ -135,7 +135,7 @@ defmodule Probe do
 
   """
   def rotate(command, probe) do
-    make_probe(probe.pos_x, probe.pos_y, Direction.rotate(command, probe.direction))
+    make_probe(probe.status, probe.pos_x, probe.pos_y, Direction.rotate(command, probe.direction))
   end
 
   @doc """
@@ -185,6 +185,31 @@ defmodule Probe do
   end
 
   @doc """
+  Moves a probe according to a command (:forward, :left, :right) and a map.
+
+  ## Parameters
+
+    - command: the command given to the probe
+    - probe: the probe state
+    - map: upper and left bounds for the coordinates
+
+  ## Examples
+
+      iex> Probe.move_in_map(:forward, Probe.make_probe(1, 2, :north), ProbeMap.make_map(5, 5))
+      %{ pos_x: 1, pos_y: 3, direction: :north, status: :ok }
+
+  """
+  def move_in_map(command, probe, map) do
+    new_probe = move(command, probe)
+
+    if new_probe.pos_x > map.x or new_probe.pos_y > map.y do
+      make_lost_probe()
+    else
+      new_probe
+    end
+  end
+
+  @doc """
   Moves a probe according to an enumerable containing commands (:forward, :left, :right).
 
   ## Parameters
@@ -200,5 +225,24 @@ defmodule Probe do
   """
   def move_batch(commands, probe) do
     Enum.reduce(commands, probe, fn comm, acc -> move(comm, acc) end)
+  end
+
+  @doc """
+  Moves a probe according to an enumerable containing commands (:forward, :left, :right) and a map.
+
+  ## Parameters
+
+    - commands: enumaerable containing commands to be given to the probe.
+    - probe: the probe state that will move forward
+    - map: upper and left bounds for the coordinates
+
+  ## Examples
+
+      iex> Probe.move_batch_in_map([:forward], Probe.make_probe(1, 2, :north), ProbeMap.make_map(5, 5))
+      %{ pos_x: 1, pos_y: 3, direction: :north, status: :ok }
+
+  """
+  def move_batch_in_map(commands, probe, map) do
+    Enum.reduce(commands, probe, fn comm, acc -> move_in_map(comm, acc, map) end)
   end
 end

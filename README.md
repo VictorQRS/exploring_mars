@@ -20,9 +20,7 @@ mova-se para a frente um ponto da malha, mantendo a mesma direção.
 
 Nesta malha o ponto ao norte de (x,y) é sempre (x, y+1).
 
-Você deve fazer um programa que processe uma série de instruções enviadas para as
-sondas que estão explorando este planalto. O formato da entrada e saída deste
-programa segue abaixo.
+Caso a sonda, por alguma razão, saia do mapa, definido por (0, 0) e o limite superior-esquerdo, a sonda será dada como perdida e não terá mais a confiança de que sua posição atual é válida. O mesmo vale caso ocorra um erro na configuração do mapa.
 
 ## Rodando a aplicação
 
